@@ -3,8 +3,10 @@ package com.dev.jikan.ui.screen
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.*
@@ -27,6 +29,7 @@ import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
 import app.src.main.java.com.dev.jikan.ui_components.components.Button
 import app.src.main.java.com.dev.jikan.ui_components.components.topbar.TopBar
 import app.src.main.java.com.dev.jikan.ui_components.components.progressindicators.CircularProgressIndicator
+import kotlinx.coroutines.launch
 
 @Composable
 fun AnimeListScreen(
@@ -74,6 +77,12 @@ fun AnimeListScreen(
                         animeList = uiState.animeList,
                         onAnimeClick = onAnimeClick,
                         isLoading = uiState.isLoading,
+                        isLoadingMore = uiState.isLoadingMore,
+                        hasNextPage = uiState.hasNextPage,
+                        paginationError = uiState.paginationError,
+                        onLoadMore = { viewModel.loadMoreAnime() },
+                        onRetryLoadMore = { viewModel.retryLoadMore() },
+                        onClearPaginationError = { viewModel.clearPaginationError() },
                         onRefresh = { viewModel.refreshAnimeList() }
                     )
                 }
@@ -120,9 +129,32 @@ fun AnimeGrid(
     animeList: List<Anime>,
     onAnimeClick: (Int) -> Unit,
     isLoading: Boolean,
+    isLoadingMore: Boolean,
+    hasNextPage: Boolean,
+    paginationError: String?,
+    onLoadMore: () -> Unit,
+    onRetryLoadMore: () -> Unit,
+    onClearPaginationError: () -> Unit,
     onRefresh: () -> Unit
 ) {
+    val gridState = rememberLazyGridState()
+    val coroutineScope = rememberCoroutineScope()
+
+    // Infinite scroll logic
+    LaunchedEffect(gridState) {
+        snapshotFlow { gridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .collect { lastVisibleIndex ->
+                if (lastVisibleIndex != null && 
+                    lastVisibleIndex >= animeList.size - 6 && // Load when 6 items from bottom
+                    hasNextPage && 
+                    !isLoadingMore) {
+                    onLoadMore()
+                }
+            }
+    }
+
     LazyVerticalGrid(
+        state = gridState,
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -136,6 +168,48 @@ fun AnimeGrid(
                     onAnimeClick(anime.malId)
                 }
             )
+        }
+
+        // Loading more indicator
+        if (isLoadingMore) {
+            item(span = { GridItemSpan(2) }) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+        }
+
+        // Pagination error
+        if (paginationError != null) {
+            item(span = { GridItemSpan(2) }) {
+                PaginationErrorCard(
+                    error = paginationError,
+                    onRetry = onRetryLoadMore,
+                    onDismiss = onClearPaginationError
+                )
+            }
+        }
+
+        // End of list indicator
+        if (!hasNextPage && animeList.isNotEmpty() && !isLoadingMore) {
+            item(span = { GridItemSpan(2) }) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "You've reached the end!",
+                        style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body2
+                    )
+                }
+            }
         }
     }
 }
@@ -196,6 +270,51 @@ fun AnimeCard(
                             fontWeight = FontWeight.Medium
                         )
                     }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun PaginationErrorCard(
+    error: String,
+    onRetry: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Failed to load more anime",
+                style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h3,
+                fontWeight = FontWeight.Bold
+            )
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            Text(
+                text = error,
+                style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body2
+            )
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(onClick = onRetry) {
+                    Text("Retry")
+                }
+                
+                Button(onClick = onDismiss) {
+                    Text("Dismiss")
                 }
             }
         }

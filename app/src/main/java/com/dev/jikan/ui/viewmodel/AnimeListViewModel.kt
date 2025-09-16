@@ -16,6 +16,10 @@ class AnimeListViewModel(
     private val _uiState = MutableStateFlow(AnimeListUiState())
     val uiState: StateFlow<AnimeListUiState> = _uiState.asStateFlow()
 
+    private var currentPage = 1
+    private var hasNextPage = true
+    private val maxItems = 300
+
     init {
         loadAnimeList()
     }
@@ -23,25 +27,72 @@ class AnimeListViewModel(
     fun loadAnimeList() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-
-            repository.getTopAnime().collect { result ->
-                result.fold(
-                    onSuccess = { animeList ->
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            animeList = animeList,
-                            error = null
-                        )
-                    },
-                    onFailure = { error ->
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            error = error.message ?: "Unknown error occurred"
-                        )
-                    }
-                )
-            }
+            
+            val result = repository.getTopAnimePage(1)
+            result.fold(
+                onSuccess = { topAnimeResponse ->
+                    val animeList = topAnimeResponse.data
+                    currentPage = topAnimeResponse.pagination.currentPage
+                    hasNextPage = topAnimeResponse.pagination.hasNextPage
+                    
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        animeList = animeList,
+                        hasNextPage = hasNextPage,
+                        currentPage = currentPage,
+                        error = null
+                    )
+                },
+                onFailure = { error ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = error.message ?: "Unknown error occurred"
+                    )
+                }
+            )
         }
+    }
+
+    fun loadMoreAnime() {
+        if (!hasNextPage || _uiState.value.isLoadingMore || _uiState.value.animeList.size >= maxItems) {
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoadingMore = true, paginationError = null)
+            
+            val nextPage = currentPage + 1
+            val result = repository.getTopAnimePage(nextPage)
+            
+            result.fold(
+                onSuccess = { topAnimeResponse ->
+                    val newAnimeList = topAnimeResponse.data
+                    currentPage = topAnimeResponse.pagination.currentPage
+                    hasNextPage = topAnimeResponse.pagination.hasNextPage
+                    
+                    // Accumulate anime lists and apply memory limit
+                    val updatedList = (_uiState.value.animeList + newAnimeList).take(maxItems)
+                    
+                    _uiState.value = _uiState.value.copy(
+                        isLoadingMore = false,
+                        animeList = updatedList,
+                        hasNextPage = hasNextPage && updatedList.size < maxItems,
+                        currentPage = currentPage,
+                        paginationError = null
+                    )
+                },
+                onFailure = { error ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoadingMore = false,
+                        paginationError = error.message ?: "Failed to load more anime"
+                    )
+                }
+            )
+        }
+    }
+
+    fun retryLoadMore() {
+        loadMoreAnime()
     }
 
     fun refreshAnimeList() {
@@ -55,11 +106,19 @@ class AnimeListViewModel(
     fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
     }
+
+    fun clearPaginationError() {
+        _uiState.value = _uiState.value.copy(paginationError = null)
+    }
 }
 
 data class AnimeListUiState(
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
+    val isLoadingMore: Boolean = false,
     val animeList: List<Anime> = emptyList(),
-    val error: String? = null
+    val hasNextPage: Boolean = true,
+    val currentPage: Int = 1,
+    val error: String? = null,
+    val paginationError: String? = null
 )

@@ -1,6 +1,7 @@
 package com.dev.jikan.data.repository
 
 import com.dev.jikan.data.model.Anime
+import com.dev.jikan.data.model.TopAnimeResponse
 import com.dev.jikan.data.remote.JikanApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -24,6 +25,25 @@ class AnimeRepository(
             }
         } catch (e: Exception) {
             emit(Result.failure(e))
+        }
+    }
+
+    suspend fun getTopAnimePage(page: Int): Result<TopAnimeResponse> {
+        return try {
+            val response = apiService.getTopAnime(page = page)
+            if (response.isSuccessful) {
+                val topAnimeResponse = response.body()
+                if (topAnimeResponse != null) {
+                    println("DEBUG: Fetched page $page with ${topAnimeResponse.data.size} anime items")
+                    Result.success(topAnimeResponse)
+                } else {
+                    Result.failure(Exception("Empty response body"))
+                }
+            } else {
+                Result.failure(Exception("Failed to fetch anime page $page: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 
