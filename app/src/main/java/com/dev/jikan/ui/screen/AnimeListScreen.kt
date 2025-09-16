@@ -25,16 +25,16 @@ import com.dev.jikan.ui.viewmodel.AnimeListViewModel
 @Composable
 fun AnimeListScreen(
     onAnimeClick: (Int) -> Unit,
-    viewModel: AnimeListViewModel = viewModel { 
+    viewModel: AnimeListViewModel = viewModel {
         AnimeListViewModel(DependencyProvider.provideAnimeRepository())
     }
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    
+
     LaunchedEffect(Unit) {
         viewModel.loadAnimeList()
     }
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -120,7 +120,10 @@ fun AnimeGrid(
         items(animeList) { anime ->
             AnimeCard(
                 anime = anime,
-                onClick = { onAnimeClick(anime.malId) }
+                onClick = {
+                    println("DEBUG: Anime clicked - Title: '${anime.title}', malId: ${anime.malId}")
+                    onAnimeClick(anime.malId)
+                }
             )
         }
     }
@@ -150,7 +153,7 @@ fun AnimeCard(
                     .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
                 contentScale = ContentScale.Crop
             )
-            
+
             // Anime Info
             Column(
                 modifier = Modifier
@@ -164,9 +167,9 @@ fun AnimeCard(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                
+
                 Spacer(modifier = Modifier.height(4.dp))
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -176,7 +179,7 @@ fun AnimeCard(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    
+
                     if (anime.score != null) {
                         Text(
                             text = "★ ${String.format("%.1f", anime.score)}",

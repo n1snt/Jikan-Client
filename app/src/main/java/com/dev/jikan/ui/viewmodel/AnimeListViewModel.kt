@@ -12,18 +12,18 @@ import kotlinx.coroutines.launch
 class AnimeListViewModel(
     private val repository: AnimeRepository
 ) : ViewModel() {
-    
+
     private val _uiState = MutableStateFlow(AnimeListUiState())
     val uiState: StateFlow<AnimeListUiState> = _uiState.asStateFlow()
-    
+
     init {
         loadAnimeList()
     }
-    
+
     fun loadAnimeList() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-            
+
             repository.getTopAnime().collect { result ->
                 result.fold(
                     onSuccess = { animeList ->
@@ -43,7 +43,7 @@ class AnimeListViewModel(
             }
         }
     }
-    
+
     fun refreshAnimeList() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isRefreshing = true)
@@ -51,7 +51,7 @@ class AnimeListViewModel(
             _uiState.value = _uiState.value.copy(isRefreshing = false)
         }
     }
-    
+
     fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
     }

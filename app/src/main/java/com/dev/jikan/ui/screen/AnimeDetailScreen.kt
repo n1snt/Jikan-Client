@@ -27,16 +27,19 @@ import com.dev.jikan.ui.viewmodel.AnimeDetailViewModel
 fun AnimeDetailScreen(
     animeId: Int,
     onBackClick: () -> Unit,
-    viewModel: AnimeDetailViewModel = viewModel { 
+    viewModel: AnimeDetailViewModel = viewModel {
         AnimeDetailViewModel(DependencyProvider.provideAnimeRepository())
     }
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    
+
     LaunchedEffect(animeId) {
-        viewModel.loadAnimeDetails(animeId)
+        println("DEBUG: Loading anime details for ID: $animeId")
+        if (animeId > 0) {
+            viewModel.loadAnimeDetails(animeId)
+        }
     }
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -55,6 +58,12 @@ fun AnimeDetailScreen(
                 .padding(paddingValues)
         ) {
             when {
+                animeId <= 0 -> {
+                    ErrorScreen(
+                        error = "Invalid anime ID: $animeId",
+                        onRetry = { /* No retry for invalid ID */ }
+                    )
+                }
                 uiState.isLoading -> {
                     LoadingScreen()
                 }
@@ -92,7 +101,7 @@ fun AnimeDetailContent(anime: Anime) {
                 contentScale = ContentScale.Crop
             )
         }
-        
+
         item {
             // Title and Basic Info
             Column {
@@ -101,7 +110,7 @@ fun AnimeDetailContent(anime: Anime) {
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 if (!anime.titleEnglish.isNullOrEmpty() && anime.titleEnglish != anime.title) {
                     Text(
                         text = anime.titleEnglish,
@@ -109,9 +118,9 @@ fun AnimeDetailContent(anime: Anime) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 // Rating and Episodes
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -132,7 +141,7 @@ fun AnimeDetailContent(anime: Anime) {
                             )
                         }
                     }
-                    
+
                     if (anime.episodes != null) {
                         Card(
                             colors = CardDefaults.cardColors(
@@ -151,7 +160,7 @@ fun AnimeDetailContent(anime: Anime) {
                 }
             }
         }
-        
+
         item {
             // Synopsis
             if (!anime.synopsis.isNullOrEmpty()) {
@@ -170,7 +179,7 @@ fun AnimeDetailContent(anime: Anime) {
                 }
             }
         }
-        
+
         item {
             // Genres
             if (!anime.genres.isNullOrEmpty()) {
@@ -203,7 +212,7 @@ fun AnimeDetailContent(anime: Anime) {
                 }
             }
         }
-        
+
         item {
             // Studios
             if (!anime.studios.isNullOrEmpty()) {
@@ -236,7 +245,7 @@ fun AnimeDetailContent(anime: Anime) {
                 }
             }
         }
-        
+
         item {
             // Additional Info
             Column {
@@ -246,7 +255,7 @@ fun AnimeDetailContent(anime: Anime) {
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 InfoRow("Type", anime.type ?: "N/A")
                 InfoRow("Status", anime.status ?: "N/A")
                 InfoRow("Source", anime.source ?: "N/A")

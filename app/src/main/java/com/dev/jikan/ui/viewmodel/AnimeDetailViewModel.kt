@@ -12,14 +12,14 @@ import kotlinx.coroutines.launch
 class AnimeDetailViewModel(
     private val repository: AnimeRepository
 ) : ViewModel() {
-    
+
     private val _uiState = MutableStateFlow(AnimeDetailUiState())
     val uiState: StateFlow<AnimeDetailUiState> = _uiState.asStateFlow()
-    
+
     fun loadAnimeDetails(animeId: Int) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-            
+
             repository.getAnimeById(animeId).collect { result ->
                 result.fold(
                     onSuccess = { anime ->
@@ -39,7 +39,7 @@ class AnimeDetailViewModel(
             }
         }
     }
-    
+
     fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
     }

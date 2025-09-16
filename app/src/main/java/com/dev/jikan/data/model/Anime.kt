@@ -3,9 +3,12 @@ package com.dev.jikan.data.model
 import com.google.gson.annotations.SerializedName
 
 data class Anime(
+    @SerializedName("mal_id")
     val malId: Int,
     val title: String,
+    @SerializedName("title_english")
     val titleEnglish: String?,
+    @SerializedName("title_japanese")
     val titleJapanese: String?,
     val type: String?,
     val source: String?,
@@ -15,6 +18,7 @@ data class Anime(
     val duration: String?,
     val rating: String?,
     val score: Double?,
+    @SerializedName("scored_by")
     val scoredBy: Int?,
     val rank: Int?,
     val popularity: Int?,
@@ -53,6 +57,7 @@ data class AnimeTrailer(
 )
 
 data class Genre(
+    @SerializedName("mal_id")
     val malId: Int,
     val type: String,
     val name: String,
@@ -60,6 +65,7 @@ data class Genre(
 )
 
 data class Studio(
+    @SerializedName("mal_id")
     val malId: Int,
     val type: String,
     val name: String,
@@ -67,6 +73,7 @@ data class Studio(
 )
 
 data class Producer(
+    @SerializedName("mal_id")
     val malId: Int,
     val type: String,
     val name: String,
