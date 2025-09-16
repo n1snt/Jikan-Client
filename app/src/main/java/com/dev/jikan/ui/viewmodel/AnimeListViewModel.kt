@@ -27,14 +27,14 @@ class AnimeListViewModel(
     fun loadAnimeList() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-            
+
             val result = repository.getTopAnimePage(1)
             result.fold(
                 onSuccess = { topAnimeResponse ->
                     val animeList = topAnimeResponse.data
                     currentPage = topAnimeResponse.pagination.currentPage
                     hasNextPage = topAnimeResponse.pagination.hasNextPage
-                    
+
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         animeList = animeList,
@@ -60,19 +60,19 @@ class AnimeListViewModel(
 
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoadingMore = true, paginationError = null)
-            
+
             val nextPage = currentPage + 1
             val result = repository.getTopAnimePage(nextPage)
-            
+
             result.fold(
                 onSuccess = { topAnimeResponse ->
                     val newAnimeList = topAnimeResponse.data
                     currentPage = topAnimeResponse.pagination.currentPage
                     hasNextPage = topAnimeResponse.pagination.hasNextPage
-                    
+
                     // Accumulate anime lists and apply memory limit
                     val updatedList = (_uiState.value.animeList + newAnimeList).take(maxItems)
-                    
+
                     _uiState.value = _uiState.value.copy(
                         isLoadingMore = false,
                         animeList = updatedList,

@@ -144,9 +144,9 @@ fun AnimeGrid(
     LaunchedEffect(gridState) {
         snapshotFlow { gridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .collect { lastVisibleIndex ->
-                if (lastVisibleIndex != null && 
+                if (lastVisibleIndex != null &&
                     lastVisibleIndex >= animeList.size - 6 && // Load when 6 items from bottom
-                    hasNextPage && 
+                    hasNextPage &&
                     !isLoadingMore) {
                     onLoadMore()
                 }
@@ -296,23 +296,23 @@ fun PaginationErrorCard(
                 style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h3,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = error,
                 style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body2
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(onClick = onRetry) {
                     Text("Retry")
                 }
-                
+
                 Button(onClick = onDismiss) {
                     Text("Dismiss")
                 }
