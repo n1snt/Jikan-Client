@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,8 +21,14 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.dev.jikan.data.model.Anime
 import com.dev.jikan.di.DependencyProvider
 import com.dev.jikan.ui.viewmodel.AnimeDetailViewModel
+import app.src.main.java.com.dev.jikan.ui_components.components.Scaffold
+import app.src.main.java.com.dev.jikan.ui_components.components.Text
+import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
+import app.src.main.java.com.dev.jikan.ui_components.components.Button
+import app.src.main.java.com.dev.jikan.ui_components.components.topbar.TopBar
+import app.src.main.java.com.dev.jikan.ui_components.components.progressindicators.CircularProgressIndicator
+import app.src.main.java.com.dev.jikan.ui_components.components.Icon
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnimeDetailScreen(
     animeId: Int,
@@ -42,14 +48,18 @@ fun AnimeDetailScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Anime Details") },
-                navigationIcon = {
+            TopBar {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
+                    Text("Anime Details")
                 }
-            )
+            }
         }
     ) { paddingValues ->
         Box(
@@ -107,15 +117,14 @@ fun AnimeDetailContent(anime: Anime) {
             Column {
                 Text(
                     text = anime.title,
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h1,
                     fontWeight = FontWeight.Bold
                 )
 
                 if (!anime.titleEnglish.isNullOrEmpty() && anime.titleEnglish != anime.title) {
                     Text(
                         text = anime.titleEnglish,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h3
                     )
                 }
 
@@ -127,33 +136,21 @@ fun AnimeDetailContent(anime: Anime) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     if (anime.score != null) {
-                        Card(
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer
-                            )
-                        ) {
+                        Card {
                             Text(
                                 text = "★ ${String.format("%.1f", anime.score)}",
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     }
 
                     if (anime.episodes != null) {
-                        Card(
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.secondaryContainer
-                            )
-                        ) {
+                        Card {
                             Text(
                                 text = "${anime.episodes} Episodes",
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     }
@@ -167,14 +164,13 @@ fun AnimeDetailContent(anime: Anime) {
                 Column {
                     Text(
                         text = "Synopsis",
-                        style = MaterialTheme.typography.titleLarge,
+                        style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h2,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = anime.synopsis,
-                        style = MaterialTheme.typography.bodyLarge,
-                        lineHeight = MaterialTheme.typography.bodyLarge.lineHeight
+                        style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body1
                     )
                 }
             }
@@ -186,7 +182,7 @@ fun AnimeDetailContent(anime: Anime) {
                 Column {
                     Text(
                         text = "Genres",
-                        style = MaterialTheme.typography.titleLarge,
+                        style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h2,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -195,16 +191,10 @@ fun AnimeDetailContent(anime: Anime) {
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         anime.genres.take(5).forEach { genre ->
-                            Card(
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.tertiaryContainer
-                                )
-                            ) {
+                            Card {
                                 Text(
                                     text = genre.name,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                                 )
                             }
                         }
@@ -219,7 +209,7 @@ fun AnimeDetailContent(anime: Anime) {
                 Column {
                     Text(
                         text = "Studios",
-                        style = MaterialTheme.typography.titleLarge,
+                        style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h2,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -228,16 +218,10 @@ fun AnimeDetailContent(anime: Anime) {
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         anime.studios.forEach { studio ->
-                            Card(
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                                )
-                            ) {
+                            Card {
                                 Text(
                                     text = studio.name,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                                 )
                             }
                         }
@@ -251,7 +235,7 @@ fun AnimeDetailContent(anime: Anime) {
             Column {
                 Text(
                     text = "Additional Information",
-                    style = MaterialTheme.typography.titleLarge,
+                    style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h2,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -282,13 +266,12 @@ fun InfoRow(label: String, value: String) {
     ) {
         Text(
             text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body2,
+            fontWeight = FontWeight.Medium
         )
         Text(
             text = value,
-            style = MaterialTheme.typography.bodyMedium,
+            style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body2,
             textAlign = TextAlign.End,
             modifier = Modifier.weight(1f)
         )

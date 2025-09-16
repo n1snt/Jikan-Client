@@ -1,11 +1,12 @@
 package com.dev.jikan.ui.screen
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,8 +21,13 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.dev.jikan.data.model.Anime
 import com.dev.jikan.di.DependencyProvider
 import com.dev.jikan.ui.viewmodel.AnimeListViewModel
+import app.src.main.java.com.dev.jikan.ui_components.components.Scaffold
+import app.src.main.java.com.dev.jikan.ui_components.components.Text
+import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
+import app.src.main.java.com.dev.jikan.ui_components.components.Button
+import app.src.main.java.com.dev.jikan.ui_components.components.topbar.TopBar
+import app.src.main.java.com.dev.jikan.ui_components.components.progressindicators.CircularProgressIndicator
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnimeListScreen(
     onAnimeClick: (Int) -> Unit,
@@ -37,9 +43,15 @@ fun AnimeListScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Top Anime") }
-            )
+            TopBar {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Top Anime")
+                }
+            }
         }
     ) { paddingValues ->
         Box(
@@ -92,11 +104,10 @@ fun ErrorScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = "Error: $error",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.error
-        )
+                    Text(
+                        text = "Error: $error",
+                        style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body1
+                    )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onRetry) {
             Text("Retry")
@@ -139,8 +150,7 @@ fun AnimeCard(
         modifier = Modifier
             .fillMaxWidth()
             .height(280.dp),
-        onClick = onClick,
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        onClick = onClick
     ) {
         Column {
             // Anime Poster
@@ -162,7 +172,7 @@ fun AnimeCard(
             ) {
                 Text(
                     text = anime.title,
-                    style = MaterialTheme.typography.titleSmall,
+                    style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h4,
                     fontWeight = FontWeight.Bold,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
@@ -176,15 +186,13 @@ fun AnimeCard(
                 ) {
                     Text(
                         text = "Episodes: ${anime.episodes ?: "N/A"}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body3
                     )
 
                     if (anime.score != null) {
                         Text(
                             text = "★ ${String.format("%.1f", anime.score)}",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.primary,
+                            style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body3,
                             fontWeight = FontWeight.Medium
                         )
                     }
