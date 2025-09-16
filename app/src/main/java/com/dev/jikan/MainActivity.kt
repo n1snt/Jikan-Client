@@ -11,8 +11,11 @@ import androidx.compose.ui.Modifier
 import com.dev.jikan.navigation.AnimeNavigation
 import com.dev.jikan.ui.theme.JikanTheme
 import app.src.main.java.com.dev.jikan.ui_components.AppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

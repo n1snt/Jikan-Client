@@ -17,11 +17,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.dev.jikan.data.model.Anime
-import com.dev.jikan.di.DependencyProvider
 import com.dev.jikan.ui.viewmodel.AnimeListViewModel
 import app.src.main.java.com.dev.jikan.ui_components.components.Scaffold
 import app.src.main.java.com.dev.jikan.ui_components.components.Text
@@ -34,9 +33,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AnimeListScreen(
     onAnimeClick: (Int) -> Unit,
-    viewModel: AnimeListViewModel = viewModel {
-        AnimeListViewModel(DependencyProvider.provideAnimeRepository())
-    }
+    viewModel: AnimeListViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -57,11 +54,15 @@ fun AnimeListScreen(
             }
         }
     ) { paddingValues ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
             when {
                 uiState.isLoading && uiState.animeList.isEmpty() -> {
                     LoadingScreen()
@@ -86,6 +87,7 @@ fun AnimeListScreen(
                         onRefresh = { viewModel.refreshAnimeList() }
                     )
                 }
+            }
             }
         }
     }

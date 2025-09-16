@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -65,10 +67,15 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.gson)
 
-    // Room Database (temporarily disabled for core functionality)
-    // implementation(libs.room.runtime)
-    // implementation(libs.room.ktx)
-    // kapt(libs.room.compiler)
+    // Room Database
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
+    // Hilt Dependency Injection
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 
     // Image Loading
     implementation(libs.glide)

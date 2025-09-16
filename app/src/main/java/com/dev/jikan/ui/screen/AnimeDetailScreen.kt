@@ -20,11 +20,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.dev.jikan.data.model.Anime
-import com.dev.jikan.di.DependencyProvider
 import com.dev.jikan.ui.viewmodel.AnimeDetailViewModel
 import com.dev.jikan.ui.components.AnimeTrailerPlayer
 import com.dev.jikan.ui.components.TrailerPlaceholder
@@ -40,9 +39,7 @@ import app.src.main.java.com.dev.jikan.ui_components.components.Icon
 fun AnimeDetailScreen(
     animeId: Int,
     onBackClick: () -> Unit,
-    viewModel: AnimeDetailViewModel = viewModel {
-        AnimeDetailViewModel(DependencyProvider.provideAnimeRepository())
-    }
+    viewModel: AnimeDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
