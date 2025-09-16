@@ -26,6 +26,8 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.dev.jikan.data.model.Anime
 import com.dev.jikan.di.DependencyProvider
 import com.dev.jikan.ui.viewmodel.AnimeDetailViewModel
+import com.dev.jikan.ui.components.AnimeTrailerPlayer
+import com.dev.jikan.ui.components.TrailerPlaceholder
 import app.src.main.java.com.dev.jikan.ui_components.components.Scaffold
 import app.src.main.java.com.dev.jikan.ui_components.components.Text
 import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
@@ -105,16 +107,17 @@ fun AnimeDetailContent(anime: Anime) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
-            // Anime Poster/Image
-            GlideImage(
-                model = anime.images?.jpg?.largeImageUrl ?: anime.images?.jpg?.imageUrl,
-                contentDescription = anime.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-                    .clip(RoundedCornerShape(12.dp)),
-                contentScale = ContentScale.Crop
-            )
+            // Anime Trailer/Poster
+            if (anime.trailer?.youtubeId != null) {
+                AnimeTrailerPlayer(
+                    trailer = anime.trailer,
+                    posterImageUrl = anime.images?.jpg?.largeImageUrl ?: anime.images?.jpg?.imageUrl
+                )
+            } else {
+                TrailerPlaceholder(
+                    posterImageUrl = anime.images?.jpg?.largeImageUrl ?: anime.images?.jpg?.imageUrl
+                )
+            }
         }
 
         item {
