@@ -7,10 +7,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import app.src.main.java.com.dev.jikan.ui_components.components.Text
 import com.dev.jikan.ui.theme.JikanTheme
 
 class MainActivity : ComponentActivity() {
@@ -42,6 +42,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     JikanTheme {
-        Greeting("Android")
+        Greeting("Seekho")
     }
 }
