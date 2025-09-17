@@ -81,9 +81,6 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.glide.compose)
 
-    // Video Player
-    implementation(libs.exoplayer)
-    implementation(libs.exoplayer.ui)
 
     // Testing
     testImplementation(libs.junit)

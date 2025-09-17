@@ -198,7 +198,6 @@ fun AnimeGrid(
             AnimeCard(
                 anime = anime,
                 onClick = {
-                    println("DEBUG: Anime clicked - Title: '${anime.title}', malId: ${anime.malId}")
                     onAnimeClick(anime.malId)
                 }
             )

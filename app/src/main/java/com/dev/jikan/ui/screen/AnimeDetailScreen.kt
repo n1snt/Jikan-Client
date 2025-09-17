@@ -56,7 +56,6 @@ fun AnimeDetailScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(animeId) {
-        println("DEBUG: Loading anime details for ID: $animeId")
         if (animeId > 0) {
             viewModel.loadAnimeDetails(animeId)
         }

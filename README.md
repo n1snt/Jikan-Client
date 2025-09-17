@@ -20,17 +20,17 @@ A modern Android app that fetches and displays anime data using the Jikan API wi
 - **Networking**: Retrofit + OkHttp
 - **Database**: Room
 - **Images**: Glide
-- **Video**: ExoPlayer
 - **UI Components**: Lumo Design System
 
 ## Screenshots
 
 ### Main Features
 
-| Feature           | Light Theme                                            | Dark Theme                                           |
-| ----------------- | ------------------------------------------------------ | ---------------------------------------------------- |
-| **Anime List**    | ![Top Anime Light](assets/top_anime_light.png)         | ![Top Anime Dark](assets/top_anime_dark.png)         |
-| **Anime Details** | ![Anime Details Light](assets/anime_details_light.png) | ![Anime Details Dark](assets/anime_details_dark.png) |
+| Feature                  | Light Theme                                                          | Dark Theme                                                         |
+| ------------------------ | -------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| **Anime List**           | ![Top Anime Light](assets/top_anime_light.png)                       | ![Top Anime Dark](assets/top_anime_dark.png)                       |
+| **Anime Details**        | ![Anime Details Light](assets/anime_details_light.png)               | ![Anime Details Dark](assets/anime_details_dark.png)               |
+| **Anime Details Bottom** | ![Anime Details Light Bottom](assets/anime_details_light_bottom.png) | ![Anime Details Dark Bottom](assets/anime_details_dark_bottom.png) |
 
 ### Error States & Offline Mode
 
@@ -91,6 +91,6 @@ Uses [Jikan API](https://jikan.moe/) for anime data:
 
 ## Known Limitations
 
-- **Video Playback**: Trailers redirect to YouTube app/browser since ExoPlayer cannot directly play YouTube videos
+- **Video Playback**: Trailers redirect to YouTube app/browser for playback
 - **API Rate Limits**: Jikan API has rate limiting (3 requests/second)
 - **Image Caching**: Images are cached by Glide but not persisted across app restarts

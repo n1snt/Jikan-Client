@@ -19,7 +19,6 @@ fun AnimeNavigation(
         composable("anime_list") {
             AnimeListScreen(
                 onAnimeClick = { animeId ->
-                    println("DEBUG: Navigating to anime detail with ID: $animeId")
                     navController.navigate("anime_detail/$animeId")
                 }
             )
@@ -28,8 +27,6 @@ fun AnimeNavigation(
         composable("anime_detail/{animeId}") { backStackEntry ->
             val animeIdString = backStackEntry.arguments?.getString("animeId")
             val animeId = animeIdString?.toIntOrNull() ?: 0
-            println("DEBUG: Raw anime ID string: '$animeIdString'")
-            println("DEBUG: Parsed anime ID from navigation: $animeId")
             AnimeDetailScreen(
                 animeId = animeId,
                 onBackClick = {
