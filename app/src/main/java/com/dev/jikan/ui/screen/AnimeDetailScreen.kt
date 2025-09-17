@@ -69,7 +69,7 @@ fun AnimeDetailScreen(
             }
         }
     ) { paddingValues ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
@@ -82,7 +82,10 @@ fun AnimeDetailScreen(
                 )
             }
             
-            when {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                when {
                 animeId <= 0 -> {
                     ErrorScreen(
                         error = "Invalid anime ID: $animeId",
@@ -101,6 +104,7 @@ fun AnimeDetailScreen(
                 uiState.anime != null -> {
                     AnimeDetailContent(anime = uiState.anime!!)
                 }
+            }
             }
         }
     }
@@ -534,4 +538,3 @@ private fun formatNumber(number: Int): String {
         else -> number.toString()
     }
 }
-

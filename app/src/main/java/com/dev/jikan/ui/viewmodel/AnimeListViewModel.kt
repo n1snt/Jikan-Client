@@ -20,7 +20,7 @@ class AnimeListViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(AnimeListUiState())
     val uiState: StateFlow<AnimeListUiState> = _uiState.asStateFlow()
-    
+
     val networkState = networkMonitor.networkState()
 
     private var currentPage = 1

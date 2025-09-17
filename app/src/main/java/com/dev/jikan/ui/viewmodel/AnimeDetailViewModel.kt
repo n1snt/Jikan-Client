@@ -20,7 +20,7 @@ class AnimeDetailViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(AnimeDetailUiState())
     val uiState: StateFlow<AnimeDetailUiState> = _uiState.asStateFlow()
-    
+
     val networkState = networkMonitor.networkState()
 
     fun loadAnimeDetails(animeId: Int) {
