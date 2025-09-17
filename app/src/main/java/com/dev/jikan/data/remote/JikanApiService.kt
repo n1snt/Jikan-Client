@@ -2,6 +2,7 @@ package com.dev.jikan.data.remote
 
 import com.dev.jikan.data.model.AnimeDetailResponse
 import com.dev.jikan.data.model.TopAnimeResponse
+import com.dev.jikan.data.model.CharacterResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -22,4 +23,7 @@ interface JikanApiService {
 
     @GET("v4/anime/{id}/full")
     suspend fun getAnimeFull(@Path("id") id: Int): Response<AnimeDetailResponse>
+
+    @GET("v4/anime/{id}/characters")
+    suspend fun getAnimeCharacters(@Path("id") id: Int): Response<CharacterResponse>
 }

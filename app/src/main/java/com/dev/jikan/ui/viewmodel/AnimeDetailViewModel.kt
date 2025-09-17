@@ -3,6 +3,7 @@ package com.dev.jikan.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dev.jikan.data.model.Anime
+import com.dev.jikan.data.model.CharacterData
 import com.dev.jikan.data.repository.AnimeRepository
 import com.dev.jikan.data.network.NetworkMonitor
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,22 +28,44 @@ class AnimeDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
-            repository.getAnimeById(animeId).collect { result ->
-                result.fold(
-                    onSuccess = { anime ->
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            anime = anime,
-                            error = null
-                        )
-                    },
-                    onFailure = { error ->
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            error = error.message ?: "Failed to load anime details"
-                        )
-                    }
-                )
+            // Load anime details and characters in parallel
+            launch {
+                repository.getAnimeById(animeId).collect { result ->
+                    result.fold(
+                        onSuccess = { anime ->
+                            _uiState.value = _uiState.value.copy(
+                                isLoading = false,
+                                anime = anime,
+                                error = null
+                            )
+                        },
+                        onFailure = { error ->
+                            _uiState.value = _uiState.value.copy(
+                                isLoading = false,
+                                error = error.message ?: "Failed to load anime details"
+                            )
+                        }
+                    )
+                }
+            }
+
+            // Load characters
+            launch {
+                repository.getAnimeCharacters(animeId).collect { result ->
+                    result.fold(
+                        onSuccess = { characters ->
+                            _uiState.value = _uiState.value.copy(
+                                characters = characters,
+                                charactersError = null
+                            )
+                        },
+                        onFailure = { error ->
+                            _uiState.value = _uiState.value.copy(
+                                charactersError = error.message ?: "Failed to load characters"
+                            )
+                        }
+                    )
+                }
             }
         }
     }
@@ -50,10 +73,16 @@ class AnimeDetailViewModel @Inject constructor(
     fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
     }
+
+    fun clearCharactersError() {
+        _uiState.value = _uiState.value.copy(charactersError = null)
+    }
 }
 
 data class AnimeDetailUiState(
     val isLoading: Boolean = false,
     val anime: Anime? = null,
-    val error: String? = null
+    val characters: List<CharacterData> = emptyList(),
+    val error: String? = null,
+    val charactersError: String? = null
 )

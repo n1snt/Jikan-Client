@@ -1,9 +1,12 @@
 package com.dev.jikan.data.repository
 
 import com.dev.jikan.data.local.dao.AnimeDao
+import com.dev.jikan.data.local.dao.CharacterDao
 import com.dev.jikan.data.mapper.AnimeMapper
+import com.dev.jikan.data.mapper.CharacterMapper
 import com.dev.jikan.data.model.Anime
 import com.dev.jikan.data.model.TopAnimeResponse
+import com.dev.jikan.data.model.CharacterData
 import com.dev.jikan.data.network.NetworkMonitor
 import com.dev.jikan.data.remote.JikanApiService
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +20,7 @@ import javax.inject.Singleton
 class AnimeRepository @Inject constructor(
     private val apiService: JikanApiService,
     private val animeDao: AnimeDao,
+    private val characterDao: CharacterDao,
     private val networkMonitor: NetworkMonitor
 ) {
 
@@ -221,6 +225,89 @@ class AnimeRepository @Inject constructor(
         return animeDao.searchAnime(query).map { entities ->
             val animeList = AnimeMapper.toModelList(entities)
             Result.success(animeList)
+        }
+    }
+
+    fun getAnimeCharacters(animeMalId: Int): Flow<Result<List<CharacterData>>> {
+        return combine(
+            networkMonitor.networkState(),
+            characterDao.getCharactersByAnimeId(animeMalId)
+        ) { isOnline, localEntities ->
+            if (isOnline) {
+                // Try to fetch from API and update local database
+                try {
+                    val response = apiService.getAnimeCharacters(animeMalId)
+                    if (response.isSuccessful) {
+                        val characterList = response.body()?.data ?: emptyList()
+                        println("DEBUG: Fetched ${characterList.size} characters for anime $animeMalId")
+                        
+                        // Save to local database
+                        val entities = CharacterMapper.toEntityList(characterList, animeMalId)
+                        characterDao.insertCharacterList(entities)
+                        
+                        Result.success(characterList)
+                    } else {
+                        // API failed, return local data
+                        val localCharacters = CharacterMapper.toModelList(localEntities)
+                        Result.success(localCharacters)
+                    }
+                } catch (e: Exception) {
+                    // Network error, return local data
+                    val localCharacters = CharacterMapper.toModelList(localEntities)
+                    Result.success(localCharacters)
+                }
+            } else {
+                // Offline, return local data
+                val localCharacters = CharacterMapper.toModelList(localEntities)
+                Result.success(localCharacters)
+            }
+        }
+    }
+
+    suspend fun refreshAnimeCharacters(animeMalId: Int) {
+        if (networkMonitor.isNetworkAvailable()) {
+            try {
+                // Fetch fresh character data from API
+                val response = apiService.getAnimeCharacters(animeMalId)
+                if (response.isSuccessful) {
+                    val characterList = response.body()?.data ?: emptyList()
+                    
+                    // Update local database
+                    val entities = CharacterMapper.toEntityList(characterList, animeMalId)
+                    characterDao.insertCharacterList(entities)
+                    
+                    println("DEBUG: Refreshed characters for anime $animeMalId with ${characterList.size} items")
+                }
+            } catch (e: Exception) {
+                println("DEBUG: Failed to refresh characters for anime $animeMalId: ${e.message}")
+            }
+        }
+    }
+
+    suspend fun syncCharacterData() {
+        if (networkMonitor.isNetworkAvailable()) {
+            try {
+                // Get stale character data (older than 1 hour)
+                val cutoffTime = System.currentTimeMillis() - (60 * 60 * 1000)
+                val staleCharacters = characterDao.getStaleCharacters(cutoffTime)
+                
+                for (entity in staleCharacters) {
+                    try {
+                        val response = apiService.getAnimeCharacters(entity.animeMalId)
+                        if (response.isSuccessful) {
+                            val characterList = response.body()?.data ?: emptyList()
+                            val updatedEntities = CharacterMapper.toEntityList(characterList, entity.animeMalId)
+                            characterDao.insertCharacterList(updatedEntities)
+                        }
+                    } catch (e: Exception) {
+                        println("DEBUG: Failed to sync characters for anime ${entity.animeMalId}: ${e.message}")
+                    }
+                }
+                
+                println("DEBUG: Synced ${staleCharacters.size} stale character items")
+            } catch (e: Exception) {
+                println("DEBUG: Failed to sync character data: ${e.message}")
+            }
         }
     }
 }

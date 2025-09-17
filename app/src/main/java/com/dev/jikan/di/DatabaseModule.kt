@@ -2,6 +2,7 @@ package com.dev.jikan.di
 
 import android.content.Context
 import com.dev.jikan.data.local.dao.AnimeDao
+import com.dev.jikan.data.local.dao.CharacterDao
 import com.dev.jikan.data.local.database.AnimeDatabase
 import dagger.Module
 import dagger.Provides
@@ -23,5 +24,10 @@ object DatabaseModule {
     @Provides
     fun provideAnimeDao(database: AnimeDatabase): AnimeDao {
         return database.animeDao()
+    }
+    
+    @Provides
+    fun provideCharacterDao(database: AnimeDatabase): CharacterDao {
+        return database.characterDao()
     }
 }

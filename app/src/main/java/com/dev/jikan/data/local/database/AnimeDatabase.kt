@@ -7,17 +7,20 @@ import androidx.room.TypeConverters
 import android.content.Context
 import com.dev.jikan.data.local.converter.Converters
 import com.dev.jikan.data.local.dao.AnimeDao
+import com.dev.jikan.data.local.dao.CharacterDao
 import com.dev.jikan.data.local.entity.AnimeEntity
+import com.dev.jikan.data.local.entity.CharacterEntity
 
 @Database(
-    entities = [AnimeEntity::class],
-    version = 1,
+    entities = [AnimeEntity::class, CharacterEntity::class],
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class AnimeDatabase : RoomDatabase() {
 
     abstract fun animeDao(): AnimeDao
+    abstract fun characterDao(): CharacterDao
 
     companion object {
         @Volatile

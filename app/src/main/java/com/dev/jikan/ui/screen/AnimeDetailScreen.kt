@@ -30,6 +30,9 @@ import com.dev.jikan.ui.viewmodel.AnimeDetailViewModel
 import com.dev.jikan.ui.screen.OfflineIndicator
 import com.dev.jikan.ui.components.AnimeTrailerPlayer
 import com.dev.jikan.ui.components.TrailerPlaceholder
+import com.dev.jikan.ui.components.MainCastSection
+import com.dev.jikan.ui.components.CharacterLoadingSkeleton
+import com.dev.jikan.ui.components.CharacterErrorCard
 import app.src.main.java.com.dev.jikan.ui_components.components.Scaffold
 import app.src.main.java.com.dev.jikan.ui_components.components.Text
 import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
@@ -81,7 +84,7 @@ fun AnimeDetailScreen(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
-            
+
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -102,7 +105,12 @@ fun AnimeDetailScreen(
                     )
                 }
                 uiState.anime != null -> {
-                    AnimeDetailContent(anime = uiState.anime!!)
+                    AnimeDetailContent(
+                        anime = uiState.anime!!,
+                        characters = uiState.characters,
+                        charactersError = uiState.charactersError,
+                        onRetryCharacters = { viewModel.clearCharactersError() }
+                    )
                 }
             }
             }
@@ -112,7 +120,12 @@ fun AnimeDetailScreen(
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun AnimeDetailContent(anime: Anime) {
+fun AnimeDetailContent(
+    anime: Anime,
+    characters: List<com.dev.jikan.data.model.CharacterData>,
+    charactersError: String?,
+    onRetryCharacters: () -> Unit
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
@@ -366,6 +379,33 @@ fun AnimeDetailContent(anime: Anime) {
                             )
                         }
                     }
+                }
+            }
+        }
+
+        item {
+            // Main Cast Section
+            when {
+                charactersError != null -> {
+                    CharacterErrorCard(
+                        error = charactersError,
+                        onRetry = onRetryCharacters
+                    )
+                }
+                characters.isEmpty() -> {
+                    // Show loading skeleton while characters are being loaded
+                    Column {
+                        Text(
+                            text = "Main Cast",
+                            style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h2,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        CharacterLoadingSkeleton()
+                    }
+                }
+                else -> {
+                    MainCastSection(characters = characters)
                 }
             }
         }
