@@ -1,7 +1,6 @@
 package com.dev.jikan.ui.screen
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -17,11 +16,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.dev.jikan.data.model.Anime
 import com.dev.jikan.ui.viewmodel.AnimeListViewModel
+import com.dev.jikan.ui.components.NetworkStatusIndicator
 import app.src.main.java.com.dev.jikan.ui_components.components.Scaffold
 import app.src.main.java.com.dev.jikan.ui_components.components.Text
 import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
@@ -29,6 +30,10 @@ import app.src.main.java.com.dev.jikan.ui_components.components.Button
 import app.src.main.java.com.dev.jikan.ui_components.components.topbar.TopBar
 import app.src.main.java.com.dev.jikan.ui_components.components.progressindicators.CircularProgressIndicator
 import kotlinx.coroutines.launch
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun AnimeListScreen(
@@ -59,7 +64,14 @@ fun AnimeListScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            
+            // Network status indicator
+            val isOnline by viewModel.networkState.collectAsState(initial = true)
+            if (!isOnline) {
+                OfflineIndicator(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
+
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -319,6 +331,36 @@ fun PaginationErrorCard(
                     Text("Dismiss")
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun OfflineIndicator(
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = Icons.Default.Warning,
+                contentDescription = "Offline",
+                tint = MaterialTheme.colorScheme.error,
+                modifier = Modifier.size(16.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "You're offline. Showing cached data.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error
+            )
         }
     }
 }

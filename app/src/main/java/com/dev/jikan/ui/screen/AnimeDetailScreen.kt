@@ -11,7 +11,9 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +27,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.dev.jikan.data.model.Anime
 import com.dev.jikan.ui.viewmodel.AnimeDetailViewModel
+import com.dev.jikan.ui.screen.OfflineIndicator
 import com.dev.jikan.ui.components.AnimeTrailerPlayer
 import com.dev.jikan.ui.components.TrailerPlaceholder
 import app.src.main.java.com.dev.jikan.ui_components.components.Scaffold
@@ -71,6 +74,14 @@ fun AnimeDetailScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            // Network status indicator
+            val isOnline by viewModel.networkState.collectAsState(initial = true)
+            if (!isOnline) {
+                OfflineIndicator(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
+            
             when {
                 animeId <= 0 -> {
                     ErrorScreen(
@@ -523,3 +534,4 @@ private fun formatNumber(number: Int): String {
         else -> number.toString()
     }
 }
+
