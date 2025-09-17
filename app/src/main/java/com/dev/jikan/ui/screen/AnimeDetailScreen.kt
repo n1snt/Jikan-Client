@@ -21,7 +21,8 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.IconButton
+import app.src.main.java.com.dev.jikan.ui_components.components.Icon
+import app.src.main.java.com.dev.jikan.ui_components.components.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -70,7 +71,10 @@ fun AnimeDetailScreen(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = onBackClick) {
+                    Button(
+                        onClick = onBackClick,
+                        variant = app.src.main.java.com.dev.jikan.ui_components.components.ButtonVariant.Ghost
+                    ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                     Text("Anime Details")

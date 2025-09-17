@@ -19,8 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import app.src.main.java.com.dev.jikan.ui_components.AppTheme
+import app.src.main.java.com.dev.jikan.ui_components.components.Button
 import app.src.main.java.com.dev.jikan.ui_components.components.Icon
 import app.src.main.java.com.dev.jikan.ui_components.components.Text
 import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
@@ -89,7 +89,7 @@ fun CharacterCard(
                 modifier = Modifier
                     .size(80.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                    .background(AppTheme.colors.surface),
                 contentAlignment = Alignment.Center
             ) {
                 val imageUrl = characterData.character.images?.jpg?.imageUrl
@@ -184,7 +184,7 @@ fun VoiceActorInfo(
                         "english" -> Color(0xFF3182CE) // Blue for English
                         "korean" -> Color(0xFF38A169) // Green for Korean
                         "chinese" -> Color(0xFFD69E2E) // Yellow for Chinese
-                        else -> MaterialTheme.colorScheme.primary
+                        else -> AppTheme.colors.primary
                     }
                 ),
             contentAlignment = Alignment.Center
@@ -236,7 +236,7 @@ fun CharacterLoadingSkeleton(
                         modifier = Modifier
                             .size(80.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .background(AppTheme.colors.surface)
                     )
 
                     // Skeleton for character name
@@ -245,7 +245,7 @@ fun CharacterLoadingSkeleton(
                             .fillMaxWidth()
                             .height(20.dp)
                             .clip(RoundedCornerShape(4.dp))
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .background(AppTheme.colors.surface)
                     )
 
                     // Skeleton for voice actor info
@@ -255,7 +255,7 @@ fun CharacterLoadingSkeleton(
                                 .fillMaxWidth()
                                 .height(16.dp)
                                 .clip(RoundedCornerShape(4.dp))
-                                .background(MaterialTheme.colorScheme.surfaceVariant)
+                                .background(AppTheme.colors.surface)
                         )
                     }
                 }
@@ -291,9 +291,10 @@ fun CharacterErrorCard(
                 textAlign = TextAlign.Center
             )
 
-            Button(onClick = onRetry) {
-                Text("Retry")
-            }
+            Button(
+                text = "Retry",
+                onClick = onRetry
+            )
         }
     }
 }

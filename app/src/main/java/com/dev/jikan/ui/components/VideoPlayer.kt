@@ -16,10 +16,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
+import app.src.main.java.com.dev.jikan.ui_components.components.card.CardDefaults
+import app.src.main.java.com.dev.jikan.ui_components.components.Icon
+import app.src.main.java.com.dev.jikan.ui_components.components.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier

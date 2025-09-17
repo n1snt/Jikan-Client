@@ -23,8 +23,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import app.src.main.java.com.dev.jikan.ui_components.components.Icon
+import app.src.main.java.com.dev.jikan.ui_components.AppTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -432,14 +432,14 @@ fun OfflineIndicator(
             Icon(
                 imageVector = Icons.Default.Warning,
                 contentDescription = "Offline",
-                tint = MaterialTheme.colorScheme.error,
+                tint = AppTheme.colors.error,
                 modifier = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "You're offline. Showing cached data.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error
+                style = AppTheme.typography.body2,
+                color = AppTheme.colors.error
             )
         }
     }

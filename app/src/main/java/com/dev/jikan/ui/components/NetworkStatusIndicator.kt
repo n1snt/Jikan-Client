@@ -9,11 +9,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
+import app.src.main.java.com.dev.jikan.ui_components.components.card.CardDefaults
+import app.src.main.java.com.dev.jikan.ui_components.components.Icon
+import app.src.main.java.com.dev.jikan.ui_components.AppTheme
+import app.src.main.java.com.dev.jikan.ui_components.components.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,7 +33,7 @@ fun NetworkStatusIndicator(
         Card(
             modifier = modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.errorContainer
+                containerColor = AppTheme.colors.error
             )
         ) {
             Row(
@@ -46,14 +46,14 @@ fun NetworkStatusIndicator(
                 Icon(
                     imageVector = Icons.Default.Warning,
                     contentDescription = "Offline",
-                    tint = MaterialTheme.colorScheme.onErrorContainer,
+                    tint = AppTheme.colors.onError,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "You're offline. Showing cached data.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onErrorContainer
+                    style = AppTheme.typography.body2,
+                    color = AppTheme.colors.onError
                 )
             }
         }
