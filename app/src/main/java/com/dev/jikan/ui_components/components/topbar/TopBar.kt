@@ -264,11 +264,11 @@ class TopBarState(
         get() =
             if (heightOffsetLimit != 0f) {
                 1 - (
-                    (heightOffsetLimit - contentOffset).coerceIn(
-                        minimumValue = heightOffsetLimit,
-                        maximumValue = 0f,
-                    ) / heightOffsetLimit
-                )
+                        (heightOffsetLimit - contentOffset).coerceIn(
+                            minimumValue = heightOffsetLimit,
+                            maximumValue = 0f,
+                        ) / heightOffsetLimit
+                        )
             } else {
                 0f
             }

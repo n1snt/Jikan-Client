@@ -16,10 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Warning
-import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
-import app.src.main.java.com.dev.jikan.ui_components.components.card.CardDefaults
-import app.src.main.java.com.dev.jikan.ui_components.components.Icon
-import app.src.main.java.com.dev.jikan.ui_components.components.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +25,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.src.main.java.com.dev.jikan.ui_components.components.Icon
+import app.src.main.java.com.dev.jikan.ui_components.components.Text
+import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
+import app.src.main.java.com.dev.jikan.ui_components.components.card.CardDefaults
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.dev.jikan.data.model.AnimeTrailer
@@ -89,7 +89,9 @@ fun AnimeTrailerPlayer(
                     Text(
                         text = "Due to legal constraints",
                         style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body1,
-                        color = app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.onError.copy(alpha = 0.8f)
+                        color = app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.onError.copy(
+                            alpha = 0.8f
+                        )
                     )
                 }
             }

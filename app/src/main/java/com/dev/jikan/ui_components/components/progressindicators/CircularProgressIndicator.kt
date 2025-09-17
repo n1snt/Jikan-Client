@@ -84,7 +84,7 @@ fun CircularProgressIndicator(
                     tween(
                         durationMillis =
                             CircularProgressIndicatorDefaults.RotationDuration *
-                                CircularProgressIndicatorDefaults.RotationsPerCycle,
+                                    CircularProgressIndicatorDefaults.RotationsPerCycle,
                         easing = LinearEasing,
                     ),
             ),
@@ -110,8 +110,9 @@ fun CircularProgressIndicator(
             infiniteRepeatable(
                 animation =
                     keyframes {
-                        durationMillis = CircularProgressIndicatorDefaults.HeadTailAnimationDuration +
-                            CircularProgressIndicatorDefaults.HeadTailDelayDuration
+                        durationMillis =
+                            CircularProgressIndicatorDefaults.HeadTailAnimationDuration +
+                                    CircularProgressIndicatorDefaults.HeadTailDelayDuration
                         0f at 0 using CircularProgressIndicatorDefaults.CircularEasing
                         CircularProgressIndicatorDefaults.JumpRotationAngle at CircularProgressIndicatorDefaults.HeadTailAnimationDuration
                     },
@@ -125,8 +126,9 @@ fun CircularProgressIndicator(
             infiniteRepeatable(
                 animation =
                     keyframes {
-                        durationMillis = CircularProgressIndicatorDefaults.HeadTailAnimationDuration +
-                            CircularProgressIndicatorDefaults.HeadTailDelayDuration
+                        durationMillis =
+                            CircularProgressIndicatorDefaults.HeadTailAnimationDuration +
+                                    CircularProgressIndicatorDefaults.HeadTailDelayDuration
                         0f at CircularProgressIndicatorDefaults.HeadTailDelayDuration using CircularProgressIndicatorDefaults.CircularEasing
                         CircularProgressIndicatorDefaults.JumpRotationAngle at durationMillis
                     },
@@ -147,7 +149,7 @@ fun CircularProgressIndicator(
 
         val offset =
             CircularProgressIndicatorDefaults.StartAngleOffset +
-                currentRotationAngleOffset + baseRotation.value
+                    currentRotationAngleOffset + baseRotation.value
         drawIndeterminateCircularIndicator(
             startAngle.value + offset,
             strokeWidth,

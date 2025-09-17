@@ -9,17 +9,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
-import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
-import app.src.main.java.com.dev.jikan.ui_components.components.card.CardDefaults
-import app.src.main.java.com.dev.jikan.ui_components.components.Icon
-import app.src.main.java.com.dev.jikan.ui_components.AppTheme
-import app.src.main.java.com.dev.jikan.ui_components.components.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.src.main.java.com.dev.jikan.ui_components.AppTheme
+import app.src.main.java.com.dev.jikan.ui_components.components.Icon
+import app.src.main.java.com.dev.jikan.ui_components.components.Text
+import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
+import app.src.main.java.com.dev.jikan.ui_components.components.card.CardDefaults
 import com.dev.jikan.data.network.NetworkMonitor
 
 @Composable

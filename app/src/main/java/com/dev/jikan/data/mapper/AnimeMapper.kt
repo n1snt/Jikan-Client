@@ -5,9 +5,9 @@ import com.dev.jikan.data.model.Anime
 import com.google.gson.Gson
 
 object AnimeMapper {
-    
+
     private val gson = Gson()
-    
+
     fun toEntity(anime: Anime): AnimeEntity {
         return AnimeEntity(
             malId = anime.malId,
@@ -31,27 +31,27 @@ object AnimeMapper {
             background = anime.background,
             season = anime.season,
             year = anime.year,
-            
+
             // Flatten image URLs
             imageUrl = anime.images?.jpg?.imageUrl,
             smallImageUrl = anime.images?.jpg?.smallImageUrl,
             largeImageUrl = anime.images?.jpg?.largeImageUrl,
-            
+
             // Flatten trailer info
             trailerYoutubeId = anime.trailer?.youtubeId,
             trailerUrl = anime.trailer?.url,
             trailerEmbedUrl = anime.trailer?.embedUrl,
-            
+
             // Convert lists to JSON strings
             genresJson = anime.genres?.let { gson.toJson(it) },
             studiosJson = anime.studios?.let { gson.toJson(it) },
             producersJson = anime.producers?.let { gson.toJson(it) },
-            
+
             lastUpdated = System.currentTimeMillis(),
             isOfflineAvailable = true
         )
     }
-    
+
     fun toModel(entity: AnimeEntity): Anime {
         return Anime(
             malId = entity.malId,
@@ -75,7 +75,7 @@ object AnimeMapper {
             background = entity.background,
             season = entity.season,
             year = entity.year,
-            
+
             // Reconstruct nested image structure
             images = if (entity.imageUrl != null || entity.smallImageUrl != null || entity.largeImageUrl != null) {
                 com.dev.jikan.data.model.AnimeImages(
@@ -87,7 +87,7 @@ object AnimeMapper {
                     webp = null
                 )
             } else null,
-            
+
             // Reconstruct trailer structure
             trailer = if (entity.trailerYoutubeId != null || entity.trailerUrl != null || entity.trailerEmbedUrl != null) {
                 com.dev.jikan.data.model.AnimeTrailer(
@@ -97,24 +97,24 @@ object AnimeMapper {
                     images = null
                 )
             } else null,
-            
+
             // Parse JSON strings back to lists
-            genres = entity.genresJson?.let { 
+            genres = entity.genresJson?.let {
                 gson.fromJson(it, Array<com.dev.jikan.data.model.Genre>::class.java).toList()
             },
-            studios = entity.studiosJson?.let { 
+            studios = entity.studiosJson?.let {
                 gson.fromJson(it, Array<com.dev.jikan.data.model.Studio>::class.java).toList()
             },
-            producers = entity.producersJson?.let { 
+            producers = entity.producersJson?.let {
                 gson.fromJson(it, Array<com.dev.jikan.data.model.Producer>::class.java).toList()
             }
         )
     }
-    
+
     fun toEntityList(animeList: List<Anime>): List<AnimeEntity> {
         return animeList.map { toEntity(it) }
     }
-    
+
     fun toModelList(entityList: List<AnimeEntity>): List<Anime> {
         return entityList.map { toModel(it) }
     }

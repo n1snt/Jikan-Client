@@ -14,13 +14,13 @@ import com.dev.jikan.data.remote.NetworkModule as RemoteNetworkModule
 @Module
 @InstallIn(SingletonComponent::class)
 object HiltNetworkModule {
-    
+
     @Provides
     @Singleton
     fun provideJikanApiService(): JikanApiService {
         return RemoteNetworkModule.jikanApiService
     }
-    
+
     @Provides
     @Singleton
     fun provideNetworkMonitor(@ApplicationContext context: Context): NetworkMonitor {

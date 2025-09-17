@@ -30,22 +30,22 @@ data class AnimeEntity(
     val background: String?,
     val season: String?,
     val year: Int?,
-    
+
     // Image URLs (flattened from nested structure)
     val imageUrl: String?,
     val smallImageUrl: String?,
     val largeImageUrl: String?,
-    
+
     // Trailer info (flattened)
     val trailerYoutubeId: String?,
     val trailerUrl: String?,
     val trailerEmbedUrl: String?,
-    
+
     // Related entities (stored as JSON strings)
     val genresJson: String?, // JSON string of List<Genre>
     val studiosJson: String?, // JSON string of List<Studio>
     val producersJson: String?, // JSON string of List<Producer>
-    
+
     // Metadata for offline sync
     val lastUpdated: Long = System.currentTimeMillis(),
     val isOfflineAvailable: Boolean = true

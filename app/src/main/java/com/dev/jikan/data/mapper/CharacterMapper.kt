@@ -54,7 +54,10 @@ object CharacterMapper {
         )
     }
 
-    fun toEntityList(characterDataList: List<CharacterData>, animeMalId: Int): List<CharacterEntity> {
+    fun toEntityList(
+        characterDataList: List<CharacterData>,
+        animeMalId: Int
+    ): List<CharacterEntity> {
         return characterDataList.map { toEntity(it, animeMalId) }
     }
 

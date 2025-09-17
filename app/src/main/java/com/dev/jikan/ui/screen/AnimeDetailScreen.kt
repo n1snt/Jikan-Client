@@ -21,8 +21,6 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
-import app.src.main.java.com.dev.jikan.ui_components.components.Icon
-import app.src.main.java.com.dev.jikan.ui_components.components.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -34,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import app.src.main.java.com.dev.jikan.ui_components.components.Button
 import app.src.main.java.com.dev.jikan.ui_components.components.Icon
 import app.src.main.java.com.dev.jikan.ui_components.components.Scaffold
 import app.src.main.java.com.dev.jikan.ui_components.components.Text
@@ -99,30 +98,33 @@ fun AnimeDetailScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 when {
-                animeId <= 0 -> {
-                    ErrorScreen(
-                        error = "Invalid anime ID: $animeId",
-                        onRetry = { /* No retry for invalid ID */ }
-                    )
+                    animeId <= 0 -> {
+                        ErrorScreen(
+                            error = "Invalid anime ID: $animeId",
+                            onRetry = { /* No retry for invalid ID */ }
+                        )
+                    }
+
+                    uiState.isLoading -> {
+                        LoadingScreen()
+                    }
+
+                    uiState.error != null -> {
+                        ErrorScreen(
+                            error = uiState.error ?: "Unknown error",
+                            onRetry = { viewModel.loadAnimeDetails(animeId) }
+                        )
+                    }
+
+                    uiState.anime != null -> {
+                        AnimeDetailContent(
+                            anime = uiState.anime!!,
+                            characters = uiState.characters,
+                            charactersError = uiState.charactersError,
+                            onRetryCharacters = { viewModel.clearCharactersError() }
+                        )
+                    }
                 }
-                uiState.isLoading -> {
-                    LoadingScreen()
-                }
-                uiState.error != null -> {
-                    ErrorScreen(
-                        error = uiState.error ?: "Unknown error",
-                        onRetry = { viewModel.loadAnimeDetails(animeId) }
-                    )
-                }
-                uiState.anime != null -> {
-                    AnimeDetailContent(
-                        anime = uiState.anime!!,
-                        characters = uiState.characters,
-                        charactersError = uiState.charactersError,
-                        onRetryCharacters = { viewModel.clearCharactersError() }
-                    )
-                }
-            }
             }
         }
     }
@@ -402,6 +404,7 @@ fun AnimeDetailContent(
                         onRetry = onRetryCharacters
                     )
                 }
+
                 characters.isEmpty() -> {
                     // Show loading skeleton while characters are being loaded
                     Column {
@@ -414,6 +417,7 @@ fun AnimeDetailContent(
                         CharacterLoadingSkeleton()
                     }
                 }
+
                 else -> {
                     MainCastSection(characters = characters)
                 }

@@ -23,8 +23,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
-import app.src.main.java.com.dev.jikan.ui_components.components.Icon
-import app.src.main.java.com.dev.jikan.ui_components.AppTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -40,7 +38,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import app.src.main.java.com.dev.jikan.ui_components.AppTheme
 import app.src.main.java.com.dev.jikan.ui_components.components.Button
+import app.src.main.java.com.dev.jikan.ui_components.components.Icon
 import app.src.main.java.com.dev.jikan.ui_components.components.Scaffold
 import app.src.main.java.com.dev.jikan.ui_components.components.Text
 import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
@@ -92,31 +92,33 @@ fun AnimeListScreen(
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
-            when {
-                uiState.isLoading && uiState.animeList.isEmpty() -> {
-                    LoadingScreen()
+                when {
+                    uiState.isLoading && uiState.animeList.isEmpty() -> {
+                        LoadingScreen()
+                    }
+
+                    uiState.error != null && uiState.animeList.isEmpty() -> {
+                        ErrorScreen(
+                            error = uiState.error ?: "Unknown error",
+                            onRetry = { viewModel.loadAnimeList() }
+                        )
+                    }
+
+                    else -> {
+                        AnimeGrid(
+                            animeList = uiState.animeList,
+                            onAnimeClick = onAnimeClick,
+                            isLoading = uiState.isLoading,
+                            isLoadingMore = uiState.isLoadingMore,
+                            hasNextPage = uiState.hasNextPage,
+                            paginationError = uiState.paginationError,
+                            onLoadMore = { viewModel.loadMoreAnime() },
+                            onRetryLoadMore = { viewModel.retryLoadMore() },
+                            onClearPaginationError = { viewModel.clearPaginationError() },
+                            onRefresh = { viewModel.refreshAnimeList() }
+                        )
+                    }
                 }
-                uiState.error != null && uiState.animeList.isEmpty() -> {
-                    ErrorScreen(
-                        error = uiState.error ?: "Unknown error",
-                        onRetry = { viewModel.loadAnimeList() }
-                    )
-                }
-                else -> {
-                    AnimeGrid(
-                        animeList = uiState.animeList,
-                        onAnimeClick = onAnimeClick,
-                        isLoading = uiState.isLoading,
-                        isLoadingMore = uiState.isLoadingMore,
-                        hasNextPage = uiState.hasNextPage,
-                        paginationError = uiState.paginationError,
-                        onLoadMore = { viewModel.loadMoreAnime() },
-                        onRetryLoadMore = { viewModel.retryLoadMore() },
-                        onClearPaginationError = { viewModel.clearPaginationError() },
-                        onRefresh = { viewModel.refreshAnimeList() }
-                    )
-                }
-            }
             }
         }
     }
@@ -144,10 +146,10 @@ fun ErrorScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-                    Text(
-                        text = "Error: $error",
-                        style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body1
-                    )
+        Text(
+            text = "Error: $error",
+            style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body1
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onRetry) {
             Text("Retry")
@@ -178,7 +180,8 @@ fun AnimeGrid(
                 if (lastVisibleIndex != null &&
                     lastVisibleIndex >= animeList.size - 6 && // Load when 6 items from bottom
                     hasNextPage &&
-                    !isLoadingMore) {
+                    !isLoadingMore
+                ) {
                     onLoadMore()
                 }
             }

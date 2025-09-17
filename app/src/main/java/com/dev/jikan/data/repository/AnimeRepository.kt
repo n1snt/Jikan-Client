@@ -295,7 +295,8 @@ class AnimeRepository @Inject constructor(
                         val response = apiService.getAnimeCharacters(entity.animeMalId)
                         if (response.isSuccessful) {
                             val characterList = response.body()?.data ?: emptyList()
-                            val updatedEntities = CharacterMapper.toEntityList(characterList, entity.animeMalId)
+                            val updatedEntities =
+                                CharacterMapper.toEntityList(characterList, entity.animeMalId)
                             characterDao.insertCharacterList(updatedEntities)
                         }
                     } catch (e: Exception) {

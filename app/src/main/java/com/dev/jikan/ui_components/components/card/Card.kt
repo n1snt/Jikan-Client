@@ -372,7 +372,10 @@ fun CardComponentSample() {
         }
 
         Column {
-            BasicText(text = "Outlined Card with Hover Elevation", style = LocalTypography.current.h3)
+            BasicText(
+                text = "Outlined Card with Hover Elevation",
+                style = LocalTypography.current.h3
+            )
             OutlinedCard(
                 modifier = cardModifier,
                 onClick = { /* Handle click */ },

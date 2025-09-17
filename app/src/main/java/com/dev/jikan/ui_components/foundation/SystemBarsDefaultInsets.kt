@@ -1,4 +1,3 @@
-
 package app.src.main.java.com.dev.jikan.ui_components.foundation
 
 import androidx.compose.foundation.layout.WindowInsets

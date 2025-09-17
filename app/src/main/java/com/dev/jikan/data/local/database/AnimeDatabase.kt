@@ -33,8 +33,8 @@ abstract class AnimeDatabase : RoomDatabase() {
                     AnimeDatabase::class.java,
                     "anime_database"
                 )
-                .fallbackToDestructiveMigration() // For development - remove in production
-                .build()
+                    .fallbackToDestructiveMigration() // For development - remove in production
+                    .build()
                 INSTANCE = instance
                 instance
             }
