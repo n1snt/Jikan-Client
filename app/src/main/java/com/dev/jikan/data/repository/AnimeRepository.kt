@@ -36,11 +36,11 @@ class AnimeRepository @Inject constructor(
                     if (response.isSuccessful) {
                         val animeList = response.body()?.data ?: emptyList()
                         println("DEBUG: Fetched ${animeList.size} anime items from API")
-                        
+
                         // Save to local database
                         val entities = AnimeMapper.toEntityList(animeList)
                         animeDao.insertAnimeList(entities)
-                        
+
                         Result.success(animeList)
                     } else {
                         // API failed, return local data
@@ -68,11 +68,11 @@ class AnimeRepository @Inject constructor(
                     val topAnimeResponse = response.body()
                     if (topAnimeResponse != null) {
                         println("DEBUG: Fetched page $page with ${topAnimeResponse.data.size} anime items")
-                        
+
                         // Save to local database
                         val entities = AnimeMapper.toEntityList(topAnimeResponse.data)
                         animeDao.insertAnimeList(entities)
-                        
+
                         Result.success(topAnimeResponse)
                     } else {
                         Result.failure(Exception("Empty response body"))
@@ -122,14 +122,14 @@ class AnimeRepository @Inject constructor(
                     } catch (e: Exception) {
                         apiService.getAnimeById(malId)
                     }
-                    
+
                     if (response.isSuccessful) {
                         val anime = response.body()?.data
                         if (anime != null) {
                             // Save to local database
                             val entity = AnimeMapper.toEntity(anime)
                             animeDao.insertAnime(entity)
-                            
+
                             Result.success(anime)
                         } else {
                             // API returned null, try local data
@@ -179,11 +179,11 @@ class AnimeRepository @Inject constructor(
                 val response = apiService.getTopAnime()
                 if (response.isSuccessful) {
                     val animeList = response.body()?.data ?: emptyList()
-                    
+
                     // Update local database
                     val entities = AnimeMapper.toEntityList(animeList)
                     animeDao.insertAnimeList(entities)
-                    
+
                     println("DEBUG: Refreshed anime list with ${animeList.size} items")
                 }
             } catch (e: Exception) {
@@ -198,7 +198,7 @@ class AnimeRepository @Inject constructor(
                 // Get stale data (older than 1 hour)
                 val cutoffTime = System.currentTimeMillis() - (60 * 60 * 1000)
                 val staleAnime = animeDao.getStaleAnime(cutoffTime)
-                
+
                 for (entity in staleAnime) {
                     try {
                         val response = apiService.getAnimeById(entity.malId)
@@ -213,7 +213,7 @@ class AnimeRepository @Inject constructor(
                         println("DEBUG: Failed to sync anime ${entity.malId}: ${e.message}")
                     }
                 }
-                
+
                 println("DEBUG: Synced ${staleAnime.size} stale anime items")
             } catch (e: Exception) {
                 println("DEBUG: Failed to sync offline data: ${e.message}")
@@ -240,11 +240,11 @@ class AnimeRepository @Inject constructor(
                     if (response.isSuccessful) {
                         val characterList = response.body()?.data ?: emptyList()
                         println("DEBUG: Fetched ${characterList.size} characters for anime $animeMalId")
-                        
+
                         // Save to local database
                         val entities = CharacterMapper.toEntityList(characterList, animeMalId)
                         characterDao.insertCharacterList(entities)
-                        
+
                         Result.success(characterList)
                     } else {
                         // API failed, return local data
@@ -271,11 +271,11 @@ class AnimeRepository @Inject constructor(
                 val response = apiService.getAnimeCharacters(animeMalId)
                 if (response.isSuccessful) {
                     val characterList = response.body()?.data ?: emptyList()
-                    
+
                     // Update local database
                     val entities = CharacterMapper.toEntityList(characterList, animeMalId)
                     characterDao.insertCharacterList(entities)
-                    
+
                     println("DEBUG: Refreshed characters for anime $animeMalId with ${characterList.size} items")
                 }
             } catch (e: Exception) {
@@ -290,7 +290,7 @@ class AnimeRepository @Inject constructor(
                 // Get stale character data (older than 1 hour)
                 val cutoffTime = System.currentTimeMillis() - (60 * 60 * 1000)
                 val staleCharacters = characterDao.getStaleCharacters(cutoffTime)
-                
+
                 for (entity in staleCharacters) {
                     try {
                         val response = apiService.getAnimeCharacters(entity.animeMalId)
@@ -303,7 +303,7 @@ class AnimeRepository @Inject constructor(
                         println("DEBUG: Failed to sync characters for anime ${entity.animeMalId}: ${e.message}")
                     }
                 }
-                
+
                 println("DEBUG: Synced ${staleCharacters.size} stale character items")
             } catch (e: Exception) {
                 println("DEBUG: Failed to sync character data: ${e.message}")

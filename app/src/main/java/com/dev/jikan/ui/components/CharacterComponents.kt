@@ -23,6 +23,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.dev.jikan.data.model.CharacterData
 import com.dev.jikan.data.model.VoiceActor
+import com.dev.jikan.ui.components.ImageFlags
 import app.src.main.java.com.dev.jikan.ui_components.components.Text
 import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
 import app.src.main.java.com.dev.jikan.ui_components.components.Icon
@@ -40,7 +41,7 @@ fun MainCastSection(
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(horizontal = 4.dp)
@@ -81,7 +82,7 @@ fun CharacterCard(
                 contentAlignment = Alignment.Center
             ) {
                 val imageUrl = characterData.character.images?.jpg?.imageUrl
-                if (imageUrl != null) {
+                if (!ImageFlags.shouldHideCharacterImage() && imageUrl != null) {
                     GlideImage(
                         model = imageUrl,
                         contentDescription = characterData.character.name,
@@ -91,13 +92,38 @@ fun CharacterCard(
                         contentScale = ContentScale.Crop
                     )
                 } else {
-                    // Fallback icon when no image is available
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Character",
-                        modifier = Modifier.size(40.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    // Pretty fallback when character image is hidden due to legal constraints
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                brush = androidx.compose.ui.graphics.Brush.radialGradient(
+                                    colors = listOf(
+                                        app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.tertiary,
+                                        app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.primary
+                                    )
+                                ),
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "Character",
+                                modifier = Modifier.size(32.dp),
+                                tint = app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.onTertiary
+                            )
+                            Text(
+                                text = characterData.character.name.take(1).uppercase(),
+                                style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h4,
+                                color = app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.onTertiary
+                            )
+                        }
+                    }
                 }
             }
 
@@ -247,13 +273,13 @@ fun CharacterErrorCard(
                 style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h3,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Text(
                 text = error,
                 style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body2,
                 textAlign = TextAlign.Center
             )
-            
+
             Button(onClick = onRetry) {
                 Text("Retry")
             }

@@ -1,5 +1,6 @@
 package com.dev.jikan.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -15,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,6 +25,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.dev.jikan.data.model.Anime
 import com.dev.jikan.ui.viewmodel.AnimeListViewModel
 import com.dev.jikan.ui.components.NetworkStatusIndicator
+import com.dev.jikan.ui.components.ImageFlags
 import app.src.main.java.com.dev.jikan.ui_components.components.Scaffold
 import app.src.main.java.com.dev.jikan.ui_components.components.Text
 import app.src.main.java.com.dev.jikan.ui_components.components.card.Card
@@ -32,6 +35,8 @@ import app.src.main.java.com.dev.jikan.ui_components.components.progressindicato
 import kotlinx.coroutines.launch
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 
@@ -242,15 +247,78 @@ fun AnimeCard(
     ) {
         Column {
             // Anime Poster
-            GlideImage(
-                model = anime.images?.jpg?.imageUrl,
-                contentDescription = anime.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
-                contentScale = ContentScale.Crop
-            )
+            if (!ImageFlags.shouldHideAnimePoster()) {
+                GlideImage(
+                    model = anime.images?.jpg?.imageUrl,
+                    contentDescription = anime.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                        .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                // Pretty fallback when images are hidden due to legal constraints
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                        .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+                        .background(
+                            brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                                colors = listOf(
+                                    app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.tertiary,
+                                    app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.secondary
+                                )
+                            )
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        // Anime icon
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = "Anime",
+                            modifier = Modifier.size(48.dp),
+                            tint = app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.onTertiary
+                        )
+
+                        // Anime title
+                        Text(
+                            text = anime.title,
+                            style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h3,
+                            textAlign = TextAlign.Center,
+                            maxLines = 3,
+                            overflow = TextOverflow.Ellipsis,
+                            color = app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.onTertiary
+                        )
+
+                        // Rating if available
+                        if (anime.score != null) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Star,
+                                    contentDescription = "Rating",
+                                    modifier = Modifier.size(16.dp),
+                                    tint = app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.onTertiary
+                                )
+                                Text(
+                                    text = String.format("%.1f", anime.score),
+                                    style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body2,
+                                    color = app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.onTertiary
+                                )
+                            }
+                        }
+                    }
+                }
+            }
 
             // Anime Info
             Column(

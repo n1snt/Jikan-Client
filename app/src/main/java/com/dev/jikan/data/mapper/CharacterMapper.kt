@@ -6,9 +6,9 @@ import com.dev.jikan.data.model.VoiceActor
 import com.google.gson.Gson
 
 object CharacterMapper {
-    
+
     private val gson = Gson()
-    
+
     fun toEntity(characterData: CharacterData, animeMalId: Int): CharacterEntity {
         return CharacterEntity(
             characterMalId = characterData.character.malId,
@@ -16,20 +16,20 @@ object CharacterMapper {
             characterName = characterData.character.name,
             characterUrl = characterData.character.url,
             role = characterData.role,
-            
+
             // Flatten character image URLs
             characterImageUrl = characterData.character.images?.jpg?.imageUrl,
             characterSmallImageUrl = characterData.character.images?.jpg?.smallImageUrl,
             characterLargeImageUrl = characterData.character.images?.jpg?.largeImageUrl,
-            
+
             // Convert voice actors to JSON string
             voiceActorsJson = gson.toJson(characterData.voiceActors),
-            
+
             lastUpdated = System.currentTimeMillis(),
             isOfflineAvailable = true
         )
     }
-    
+
     fun toModel(entity: CharacterEntity): CharacterData {
         return CharacterData(
             character = com.dev.jikan.data.model.Character(
@@ -48,16 +48,16 @@ object CharacterMapper {
                 name = entity.characterName
             ),
             role = entity.role,
-            voiceActors = entity.voiceActorsJson?.let { 
+            voiceActors = entity.voiceActorsJson?.let {
                 gson.fromJson(it, Array<VoiceActor>::class.java).toList()
             } ?: emptyList()
         )
     }
-    
+
     fun toEntityList(characterDataList: List<CharacterData>, animeMalId: Int): List<CharacterEntity> {
         return characterDataList.map { toEntity(it, animeMalId) }
     }
-    
+
     fun toModelList(entityList: List<CharacterEntity>): List<CharacterData> {
         return entityList.map { toModel(it) }
     }

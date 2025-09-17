@@ -14,18 +14,18 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-    
+
     @Provides
     @Singleton
     fun provideAnimeDatabase(@ApplicationContext context: Context): AnimeDatabase {
         return AnimeDatabase.getDatabase(context)
     }
-    
+
     @Provides
     fun provideAnimeDao(database: AnimeDatabase): AnimeDao {
         return database.animeDao()
     }
-    
+
     @Provides
     fun provideCharacterDao(database: AnimeDatabase): CharacterDao {
         return database.characterDao()

@@ -3,10 +3,12 @@ package com.dev.jikan.ui.components
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.dev.jikan.data.model.AnimeTrailer
+import com.dev.jikan.ui.components.ImageFlags
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -36,13 +39,52 @@ fun AnimeTrailerPlayer(
             .height(300.dp)
             .clip(RoundedCornerShape(12.dp))
     ) {
-        // Anime Poster Image (like before)
-        GlideImage(
-            model = posterImageUrl,
-            contentDescription = "Anime poster",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Fit
-        )
+        // Anime Poster Image
+        if (!ImageFlags.shouldHideTrailerThumbnail()) {
+            GlideImage(
+                model = posterImageUrl,
+                contentDescription = "Anime poster",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit
+            )
+        } else {
+            // Pretty fallback when images are hidden due to legal constraints
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                            colors = listOf(
+                                app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.error,
+                                app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.primary
+                            )
+                        )
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = "Trailer",
+                        modifier = Modifier.size(64.dp),
+                        tint = app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.onError
+                    )
+                    Text(
+                        text = "Trailer Restricted",
+                        style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h2,
+                        color = app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.onError
+                    )
+                    Text(
+                        text = "Due to legal constraints",
+                        style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.body1,
+                        color = app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.onError.copy(alpha = 0.8f)
+                    )
+                }
+            }
+        }
 
         // Small Watch Trailer Button in Bottom Center
         if (trailer?.youtubeId != null) {
@@ -99,12 +141,46 @@ fun TrailerPlaceholder(
             .height(300.dp)
             .clip(RoundedCornerShape(12.dp))
     ) {
-        GlideImage(
-            model = posterImageUrl,
-            contentDescription = "Anime poster",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+        if (!ImageFlags.shouldHideTrailerThumbnail()) {
+            GlideImage(
+                model = posterImageUrl,
+                contentDescription = "Anime poster",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            // Pretty fallback when images are hidden due to legal constraints
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                            colors = listOf(
+                                app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.surface,
+                                app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.secondary
+                            )
+                        )
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = "Poster",
+                        modifier = Modifier.size(48.dp),
+                        tint = app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.onSurface
+                    )
+                    Text(
+                        text = "Poster Restricted",
+                        style = app.src.main.java.com.dev.jikan.ui_components.AppTheme.typography.h3,
+                        color = app.src.main.java.com.dev.jikan.ui_components.AppTheme.colors.onSurface
+                    )
+                }
+            }
+        }
 
         // No trailer available overlay
         Box(
