@@ -3,8 +3,8 @@ package com.dev.jikan.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dev.jikan.data.model.Anime
-import com.dev.jikan.data.repository.AnimeRepository
 import com.dev.jikan.data.network.NetworkMonitor
+import com.dev.jikan.data.repository.AnimeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

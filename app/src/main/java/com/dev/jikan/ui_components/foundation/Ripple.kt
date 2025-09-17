@@ -19,6 +19,7 @@ import androidx.compose.ui.node.currentValueOf
 import androidx.compose.ui.node.observeReads
 import androidx.compose.ui.unit.Dp
 import app.src.main.java.com.dev.jikan.ui_components.LocalContentColor
+import app.src.main.java.com.dev.jikan.ui_components.foundation.RippleDefaults.RippleAlpha
 
 @Stable
 fun ripple(

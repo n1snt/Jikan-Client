@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.offset
 import app.src.main.java.com.dev.jikan.ui_components.AppTheme
 import app.src.main.java.com.dev.jikan.ui_components.contentColorFor
 import app.src.main.java.com.dev.jikan.ui_components.foundation.systemBarsForVisualComponents
-import kotlin.jvm.JvmInline
 
 @Composable
 fun Scaffold(

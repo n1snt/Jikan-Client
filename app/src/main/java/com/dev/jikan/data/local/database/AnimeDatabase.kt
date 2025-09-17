@@ -1,10 +1,10 @@
 package com.dev.jikan.data.local.database
 
+import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import android.content.Context
 import com.dev.jikan.data.local.converter.Converters
 import com.dev.jikan.data.local.dao.AnimeDao
 import com.dev.jikan.data.local.dao.CharacterDao

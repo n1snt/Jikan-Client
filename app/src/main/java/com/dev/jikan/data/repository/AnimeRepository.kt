@@ -5,14 +5,13 @@ import com.dev.jikan.data.local.dao.CharacterDao
 import com.dev.jikan.data.mapper.AnimeMapper
 import com.dev.jikan.data.mapper.CharacterMapper
 import com.dev.jikan.data.model.Anime
-import com.dev.jikan.data.model.TopAnimeResponse
 import com.dev.jikan.data.model.CharacterData
+import com.dev.jikan.data.model.TopAnimeResponse
 import com.dev.jikan.data.network.NetworkMonitor
 import com.dev.jikan.data.remote.JikanApiService
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 

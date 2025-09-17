@@ -45,6 +45,7 @@ import app.src.main.java.com.dev.jikan.ui_components.AppTheme
 import app.src.main.java.com.dev.jikan.ui_components.LocalContentColor
 import app.src.main.java.com.dev.jikan.ui_components.components.Surface
 import app.src.main.java.com.dev.jikan.ui_components.components.topbar.TopBarDefaults.TopBarHeight
+import app.src.main.java.com.dev.jikan.ui_components.components.topbar.TopBarState.Companion.Saver
 import app.src.main.java.com.dev.jikan.ui_components.contentColorFor
 import app.src.main.java.com.dev.jikan.ui_components.foundation.systemBarsForVisualComponents
 

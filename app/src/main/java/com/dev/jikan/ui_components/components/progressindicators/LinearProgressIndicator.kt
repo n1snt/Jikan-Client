@@ -20,10 +20,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import app.src.main.java.com.dev.jikan.ui_components.AppTheme
-import androidx.compose.ui.tooling.preview.Preview
 import kotlin.math.abs
 
 @Composable

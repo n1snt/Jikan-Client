@@ -1,8 +1,8 @@
 package com.dev.jikan.data.remote
 
 import com.dev.jikan.data.model.AnimeDetailResponse
-import com.dev.jikan.data.model.TopAnimeResponse
 import com.dev.jikan.data.model.CharacterResponse
+import com.dev.jikan.data.model.TopAnimeResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

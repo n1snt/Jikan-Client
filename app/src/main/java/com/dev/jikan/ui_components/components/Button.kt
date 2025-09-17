@@ -25,11 +25,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.src.main.java.com.dev.jikan.ui_components.AppTheme
 import app.src.main.java.com.dev.jikan.ui_components.LocalContentColor
 import app.src.main.java.com.dev.jikan.ui_components.foundation.ButtonElevation
-import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun Button(
